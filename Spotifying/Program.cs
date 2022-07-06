@@ -1,13 +1,11 @@
-﻿using System;
-using Spotifying.Classes;
-using Spotifying.Interfaces;
-namespace Spotifying
+﻿namespace Spotifying
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            
+
+
         }
     }
 }
