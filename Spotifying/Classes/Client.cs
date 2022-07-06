@@ -1,41 +1,39 @@
-﻿using System;
+﻿using Spotifying.Interfaces;
+using System;
 using System.Collections.Generic;
 
 namespace Spotifying.Classes
 {
     internal class Client
     {
-        private Song CurrentlyPlaying { get; set; }
+        private IPlayable CurrentlyPlaying { get; set; }
         private long CurrentTime { get; set; }
         private bool Playing { get; set; }
         private bool Shuffle { get; set; }
         private bool Repeat { get; set; }
         public static Person ActiveUser;
-        public List<Person> Users { get; set; } = new();
-        public List<Album> Albums { get; set; } = new();
-        public List<Song> Songs { get; set; } = new();
+        public static List<Person> Users { get; set; } = new();
+        public static List<Album> Albums { get; set; } = new();
+        public static List<Song> Songs { get; set; } = new();
         public static List<Playlist> Playlists = new();
         public void SetShuffle(bool a) => Shuffle = a;
         public void SetRepeat(bool a) => Repeat = a;
         public void ShowAllAlbums() => Albums.ForEach(x => Console.WriteLine(x));
         public void ShowAllUsers() => Users.ForEach(x => Console.WriteLine(x.GetNaam()));
+        public Person GetActiveUser() => ActiveUser;
         public void ShowAllSongs()
         {
             foreach (var album in Albums)
-                foreach (var song in album.Songs)
-                    Console.WriteLine(song.Naam);
+                foreach (var item in album.items)
+                    Console.WriteLine(item);
         }
         public Song SelectSong(int index)
         {
             List<Song> songs = new();
-            foreach (var album in Albums)
+            foreach(Song song in Songs)
             {
-                foreach (var song in album.Songs)
-                {
-                    songs.Add(song);
-                }
+                songs.Add(song);
             }
-            index--;
             if (index < songs.Count)
                 return songs[index];
             Console.WriteLine("Could not select song because the index is out of range");
@@ -43,7 +41,6 @@ namespace Spotifying.Classes
         }
         public Person SelectUser(int index)
         {
-            index--;
             if (index < Users.Count)
                 return Users[index];
             Console.WriteLine("Could not select user because the index is out of range");
@@ -58,7 +55,6 @@ namespace Spotifying.Classes
         }
         public Album SelectAlbum(int index)
         {
-            index--;
             if (index < Albums.Count)
                 return Albums[index];
 
@@ -71,14 +67,9 @@ namespace Spotifying.Classes
             Albums = albums;
             Songs = songs;
         }
-        public void ShowUserPlaylists()
-        {
-            Playlists.ForEach(x =>
-            {
-                if (x.Owner == ActiveUser)
-                    Console.WriteLine(x.Naam);
-            });
-        }
+        public void SetCurrentlyPlaying(IPlayable item) =>CurrentlyPlaying = item;
+        public IPlayable GetCurrentlyPlaying() => CurrentlyPlaying;
+        public void ShowUserPlaylists()=> Playlists.ForEach(x => {if (x.Owner == ActiveUser) Console.WriteLine(x.Naam);});
         public Playlist SelectUserPlaylist(int index)
         {
             List<Playlist> Playlists = new();
